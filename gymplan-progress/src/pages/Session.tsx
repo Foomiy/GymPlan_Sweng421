@@ -23,6 +23,7 @@ const RestTimer = ({
 
   useEffect(() => {
     if (paused) return;
+
     const id = setInterval(() => {
       setRemaining((r) => {
         if (r <= 1) {
@@ -30,9 +31,11 @@ const RestTimer = ({
           onDone();
           return 0;
         }
+
         return r - 1;
       });
     }, 1000);
+
     return () => clearInterval(id);
   }, [paused, onDone]);
 
@@ -43,7 +46,12 @@ const RestTimer = ({
       <div className="flex items-center justify-between">
         <p className="text-sm font-semibold text-primary">Rest</p>
         <div className="flex gap-1">
-          <Button size="icon" variant="ghost" onClick={() => setPaused((p) => !p)} aria-label="pause">
+          <Button
+            size="icon"
+            variant="ghost"
+            onClick={() => setPaused((p) => !p)}
+            aria-label="pause"
+          >
             {paused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
           </Button>
           <Button size="icon" variant="ghost" onClick={onDone} aria-label="skip rest">
@@ -51,7 +59,9 @@ const RestTimer = ({
           </Button>
         </div>
       </div>
+
       <p className="mt-2 text-4xl font-bold tabular-nums">{fmt(remaining)}</p>
+
       <div className="mt-3 h-2 overflow-hidden rounded-full bg-secondary">
         <div className="h-full bg-primary transition-all" style={{ width: `${pct}%` }} />
       </div>
@@ -78,15 +88,19 @@ const Session = () => {
       navigate("/");
       return;
     }
+
     const id = setInterval(() => {
       setElapsed(Math.floor((Date.now() - startedAtRef.current) / 1000));
     }, 1000);
+
     return () => clearInterval(id);
   }, [session, navigate]);
 
   if (!session) return null;
+
   const exercises = session.workout.exercises;
   const current = exercises[idx];
+
   if (!current) return null;
 
   const completedSets = current.completedSets ?? 0;
@@ -94,9 +108,10 @@ const Session = () => {
 
   const completeSet = () => {
     const next = completedSets + 1;
+
     updateSessionExercise(current.id, { completedSets: next });
+
     if (next >= current.sets) {
-      // exercise done
       if (isLast) {
         toast.success("All exercises complete — finish to save!");
       } else if (settings.notificationsEnabled) {
@@ -111,46 +126,50 @@ const Session = () => {
 
   const finishRest = () => {
     setResting(false);
+
     if (completedSets >= current.sets && !isLast) {
       setIdx((i) => i + 1);
     }
   };
 
   const finish = async () => {
-  const completedSession = endSession();
+    const completedSession = endSession();
 
-  if (!completedSession) {
+    if (!completedSession) {
+      navigate("/library");
+      return;
+    }
+
+    try {
+      await fetch("http://localhost:8081/api/sessions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          workoutName: completedSession.name,
+          exercises: completedSession.exercises.map((exercise) => ({
+            name: exercise.name,
+            bodyPart: exercise.bodyParts[0],
+            equipment: exercise.equipment,
+            difficulty: exercise.difficulty,
+            sets: exercise.sets,
+            reps: exercise.reps,
+            completedSets: exercise.completedSets ?? 0,
+            weight: exercise.weight ?? 0,
+            notes: exercise.notes ?? "",
+          })),
+        }),
+      });
+
+      toast.success("Workout saved to backend · streak updated");
+    } catch (error) {
+      console.error(error);
+      toast.error("Workout saved locally, but backend save failed");
+    }
+
     navigate("/library");
-    return;
-  }
-
-  try {
-    await fetch("http://localhost:8081/api/sessions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        workoutName: completedSession.name,
-        exercises: completedSession.exercises.map((exercise) => ({
-          name: exercise.name,
-          bodyPart: exercise.bodyParts[0],
-          equipment: exercise.equipment,
-          difficulty: exercise.difficulty,
-          sets: exercise.sets,
-          reps: exercise.reps,
-        })),
-      }),
-    });
-
-    toast.success("Workout saved to backend · streak updated");
-  } catch (error) {
-    console.error(error);
-    toast.error("Workout saved locally, but backend save failed");
-  }
-
-  navigate("/library");
-};
+  };
 
   const cancel = () => {
     cancelSession();
@@ -163,9 +182,11 @@ const Session = () => {
         <Button variant="ghost" size="sm" onClick={cancel}>
           <X className="mr-1 h-4 w-4" /> Cancel
         </Button>
+
         <p className="text-sm font-mono tabular-nums text-muted-foreground">
           {fmt(elapsed)}
         </p>
+
         <Button
           size="icon"
           variant="ghost"
@@ -205,6 +226,7 @@ const Session = () => {
                   <span className="text-sm text-muted-foreground"> / {current.sets}</span>
                 </p>
               </div>
+
               <div>
                 <p className="text-xs text-muted-foreground">Reps</p>
                 <input
@@ -216,6 +238,7 @@ const Session = () => {
                   className="w-full rounded-md border border-input bg-background px-2 py-1 text-2xl font-bold"
                 />
               </div>
+
               <div>
                 <p className="text-xs text-muted-foreground">Weight ({settings.unit})</p>
                 <input
@@ -254,6 +277,7 @@ const Session = () => {
         >
           ← Prev
         </Button>
+
         <Button
           variant="outline"
           size="sm"
@@ -262,6 +286,7 @@ const Session = () => {
         >
           <RotateCcw className="h-3 w-3" />
         </Button>
+
         {isLast ? (
           <Button size="sm" onClick={finish}>
             Finish ✓

@@ -7,6 +7,7 @@ public class Exercise {
     private String difficulty;
     private int sets;
     private int reps;
+    private Double weight;
 
     public Exercise() {
     }
@@ -66,5 +67,13 @@ public class Exercise {
 
     public void setReps(int reps) {
         this.reps = reps;
+    }
+
+    public Double getWeight() {
+        return weight;
+    }
+
+    public void setWeight(Double weight) {
+        this.weight = weight;
     }
 }
