@@ -1,0 +1,24 @@
+# Node / frontend
+node_modules/
+dist/
+.vite/
+
+# Java / Spring Boot
+target/
+*.class
+
+# IntelliJ
+.idea/
+*.iml
+
+# VS Code
+.vscode/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# OS files
+.DS_Store
+Thumbs.db
