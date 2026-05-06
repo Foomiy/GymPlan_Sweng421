@@ -7,6 +7,9 @@ public class Workout {
     private String description;
     private List<Exercise> exercises;
 
+    private Integer estimatedDurationMinutes;
+    private List<String> tags;
+
     public Workout() {
     }
 
@@ -14,6 +17,20 @@ public class Workout {
         this.name = name;
         this.description = description;
         this.exercises = exercises;
+    }
+
+    public Workout(
+            String name,
+            String description,
+            List<Exercise> exercises,
+            Integer estimatedDurationMinutes,
+            List<String> tags
+    ) {
+        this.name = name;
+        this.description = description;
+        this.exercises = exercises;
+        this.estimatedDurationMinutes = estimatedDurationMinutes;
+        this.tags = tags;
     }
 
     public String getName() {
@@ -28,6 +45,14 @@ public class Workout {
         return exercises;
     }
 
+    public Integer getEstimatedDurationMinutes() {
+        return estimatedDurationMinutes;
+    }
+
+    public List<String> getTags() {
+        return tags;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -38,5 +63,13 @@ public class Workout {
 
     public void setExercises(List<Exercise> exercises) {
         this.exercises = exercises;
+    }
+
+    public void setEstimatedDurationMinutes(Integer estimatedDurationMinutes) {
+        this.estimatedDurationMinutes = estimatedDurationMinutes;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
     }
 }
