@@ -5,9 +5,9 @@ import com.gymplan.backend.model.Workout;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WorkoutTagDecorator extends WorkoutDecorator {
+public class WorkoutTagWrapper extends WorkoutDecorator {
 
-    public WorkoutTagDecorator(WorkoutComponent workoutComponent) {
+    public WorkoutTagWrapper(WorkoutComponent workoutComponent) {
         super(workoutComponent);
     }
 

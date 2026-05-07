@@ -2,9 +2,9 @@ package com.gymplan.backend.service;
 
 import com.gymplan.backend.builder.DefaultWorkoutDirector;
 import com.gymplan.backend.decorator.BasicWorkoutComponent;
-import com.gymplan.backend.decorator.EstimatedDurationDecorator;
+import com.gymplan.backend.decorator.EstimatedDurationWrapper;
 import com.gymplan.backend.decorator.WorkoutComponent;
-import com.gymplan.backend.decorator.WorkoutTagDecorator;
+import com.gymplan.backend.decorator.WorkoutTagWrapper;
 import com.gymplan.backend.model.Workout;
 import org.springframework.stereotype.Service;
 
@@ -46,8 +46,8 @@ public class WorkoutService {
     }
 
     private Workout decorateWorkout(Workout workout) {
-        WorkoutComponent decoratedWorkout = new WorkoutTagDecorator(
-                new EstimatedDurationDecorator(
+        WorkoutComponent decoratedWorkout = new WorkoutTagWrapper(
+                new EstimatedDurationWrapper(
                         new BasicWorkoutComponent(workout)
                 )
         );

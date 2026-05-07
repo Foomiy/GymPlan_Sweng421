@@ -2,9 +2,9 @@ package com.gymplan.backend.decorator;
 
 import com.gymplan.backend.model.Workout;
 
-public class EstimatedDurationDecorator extends WorkoutDecorator {
+public class EstimatedDurationWrapper extends WorkoutDecorator {
 
-    public EstimatedDurationDecorator(WorkoutComponent workoutComponent) {
+    public EstimatedDurationWrapper(WorkoutComponent workoutComponent) {
         super(workoutComponent);
     }
 
